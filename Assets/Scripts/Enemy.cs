@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
     public GameObject Bullet_Enemy1;
     public GameObject PowerUp;
     private Rigidbody2D Body;
+    private Vector2 deathPoint;
     private int delay = 0;
     public int delayLimit = 50;
 
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour {
         if ( delay >= delayLimit ) {
             Shoot();
         }
+        SetPos( transform.position );
         delay++;
     }
     void Shoot() {
@@ -31,9 +33,12 @@ public class Enemy : MonoBehaviour {
             player.Die();
         }
         if ( other.gameObject.tag.Equals( "Bullet" ) ) {
-            Instantiate( PowerUp, other.transform.position, Quaternion.identity );
+            Instantiate( PowerUp, deathPoint, Quaternion.identity );
             Destroy( other.gameObject );
             Destroy( gameObject );
         }
+    }
+    private void SetPos( Vector2 point ) {
+        deathPoint = point;
     }
 }
