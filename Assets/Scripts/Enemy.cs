@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-    GameObject Cannon;
+    private GameObject Cannon;
     public GameObject Bullet_Enemy1;
+    public GameObject PowerUp;
     private Rigidbody2D Body;
     private int delay = 0;
     public int delayLimit = 50;
@@ -28,6 +29,11 @@ public class Enemy : MonoBehaviour {
         var player = other.collider.GetComponent< Player >();
         if ( player != null ) {
             player.Die();
+        }
+        if ( other.gameObject.tag.Equals( "Bullet" ) ) {
+            Instantiate( PowerUp, other.transform.position, Quaternion.identity );
+            Destroy( other.gameObject );
+            Destroy( gameObject );
         }
     }
 }

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    GameObject Cannon_1;
-    GameObject Cannon_2_1;
-    GameObject Cannon_2_2;
-    GameObject Cannon_3_1;
-    GameObject Cannon_3_2;
-    GameObject Cannon_3_3;
-    GameObject Cannon_3_4;
+    private GameObject Cannon_1;
+    private GameObject Cannon_2_1;
+    private GameObject Cannon_2_2;
+    private GameObject Cannon_3_1;
+    private GameObject Cannon_3_2;
+    private GameObject Cannon_3_3;
+    private GameObject Cannon_3_4; // probably can do this with a single object
+    private SpriteRenderer pRender;
     public GameObject Bullet;
     private Rigidbody2D body;
     private Collider2D pCollider;
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour {
     private void Awake() {
         body = GetComponent< Rigidbody2D >();
         pCollider = GetComponent< Collider2D >();
+        pRender = GetComponent< SpriteRenderer >();
         Cannon_1 = transform.Find( "Cannon_1" ).gameObject;
         Cannon_2_1 = transform.Find( "Cannon_2_1" ).gameObject;
         Cannon_2_2 = transform.Find( "Cannon_2_2" ).gameObject;
@@ -45,18 +47,16 @@ public class Player : MonoBehaviour {
         view.y = Mathf.Clamp( view.y, -4.5f, 4.5f );
         transform.position = view;
         
-        if ( Input.GetKey( KeyCode.LeftShift ) ) {
-            body.velocity = new Vector2( dirX * ( ( speed / 2 ) / characterSpeed ), dirY * ( ( speed / 2 ) / characterSpeed ) );
-        } else {
-            body.velocity = new Vector2( dirX * ( speed / characterSpeed ), dirY * ( speed / characterSpeed ) );
-        }
+        if ( pRender.enabled == true ) {
+            if ( Input.GetKey( KeyCode.LeftShift ) ) {
+                body.velocity = new Vector2( dirX * ( ( speed / 2 ) / characterSpeed ), dirY * ( ( speed / 2 ) / characterSpeed ) );
+            } else {
+                body.velocity = new Vector2( dirX * ( speed / characterSpeed ), dirY * ( speed / characterSpeed ) );
+            }
 
-        if ( Input.GetKey( KeyCode.Z ) && delay >= 10 ) {
-            Shoot();
-        }
-
-        if ( Input.GetKeyDown( KeyCode.X ) && level < 3 ) {
-            level++;
+            if ( Input.GetKey( KeyCode.Z ) && delay >= 10 ) {
+                Shoot();
+            }
         }
 
         delay++;
@@ -82,16 +82,36 @@ public class Player : MonoBehaviour {
     }
 
     public void Die() {
-        Destroy( this.gameObject );
+        pRender.enabled = false;
+        pCollider.enabled = false;
+        level = 1;
         StartCoroutine( Respawn() );
     }
 
     private IEnumerator Respawn() {
         yield return new WaitForSeconds( 1f );
-        Instantiate( this, respawnPoint, Quaternion.identity );
+        transform.position = respawnPoint;
+        pRender.enabled = true;
+        pCollider.enabled = true;
     }
 
     private void SetSpawn( Vector2 point ) {
         respawnPoint = point;
+    }
+
+    public void Increase( string attribute ) {
+        switch ( attribute ) {
+            case "score":
+                break;
+            case "power":
+                if ( level < 3 ) {
+                    level++;
+                }
+                break;
+            case "bomb":
+                break;
+            case "life":
+                break;
+        }
     }
 }
