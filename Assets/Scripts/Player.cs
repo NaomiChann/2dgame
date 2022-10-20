@@ -37,7 +37,7 @@ public class Player : MonoBehaviour {
         SetSpawn( transform.position );
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         Vector2 view = transform.position;
         
         dirX = Input.GetAxisRaw( "Horizontal" );
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour {
                 body.velocity = new Vector2( dirX * ( speed / characterSpeed ), dirY * ( speed / characterSpeed ) );
             }
 
-            if ( Input.GetKey( KeyCode.Z ) && delay >= 10 ) {
+            if ( Input.GetKey( KeyCode.Z ) && delay >= 2 ) {
                 Shoot();
             }
         }

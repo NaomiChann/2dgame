@@ -5,26 +5,73 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
     private GameObject Cannon;
     public GameObject Bullet_Enemy1;
+    public GameObject Bullet_Enemy2;
     public GameObject PowerUp;
-    private Rigidbody2D Body;
+    private Rigidbody2D body;
     private Vector2 deathPoint;
     private int delay = 0;
-    public int delayLimit = 50;
+    public float vspeed = 0.5f;
+    public float hspeed = 0.1f;
+    public int type;
+    private int counter = 0;
+    public int delayLimit = 250;
 
     private void Awake() {
-        Body = GetComponent< Rigidbody2D >();
+        body = GetComponent< Rigidbody2D >();
         Cannon = transform.Find( "Cannon" ).gameObject;
     }
     private void Update() {
+        delay++;
+
         if ( delay >= delayLimit ) {
             Shoot();
         }
-        SetPos( transform.position );
-        delay++;
     }
+
+    private void FixedUpdate() {
+        switch ( type ) {
+            case 1:
+                if ( transform.position.y < 1f ) {
+                    hspeed += 0.05f;
+                    vspeed += 0.05f;
+                }
+                break;
+            case 2:
+                if ( transform.position.y < -1.5f ) {
+                    vspeed = -vspeed * 3f;
+                }
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+        if ( transform.position.x < -3f || transform.position.x > 3f || transform.position.y < -5f || transform.position.y > 6f ) {
+            Destroy( gameObject );
+        }
+        
+        body.velocity = new Vector2( hspeed, -vspeed );
+
+        SetPos( transform.position );
+    }
+
     void Shoot() {
         delay = 0;
-        Instantiate( Bullet_Enemy1, Cannon.transform.position, Quaternion.identity );
+        switch ( type ) {
+            case 1:
+                Instantiate( Bullet_Enemy1, Cannon.transform.position, Quaternion.identity );
+                break;
+            case 2:
+                StartCoroutine( Burst() );
+                break;
+            case 3:
+                Instantiate( Bullet_Enemy2, Cannon.transform.position, Quaternion.identity );
+                break;
+            default:
+                break;
+        }
+        
+        counter++;
     }
 
     private void OnCollisionEnter2D( Collision2D other ) {
@@ -40,5 +87,13 @@ public class Enemy : MonoBehaviour {
     }
     private void SetPos( Vector2 point ) {
         deathPoint = point;
+    }
+    private IEnumerator Burst() {
+        yield return new WaitForSeconds( 0.2f );
+        Instantiate( Bullet_Enemy2, Cannon.transform.position, Quaternion.identity );
+        yield return new WaitForSeconds( 0.2f );
+        Instantiate( Bullet_Enemy2, Cannon.transform.position, Quaternion.identity );
+        yield return new WaitForSeconds( 0.2f );
+        Instantiate( Bullet_Enemy2, Cannon.transform.position, Quaternion.identity );
     }
 }

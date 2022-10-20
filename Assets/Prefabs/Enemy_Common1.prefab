@@ -153,8 +153,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Bullet_Enemy1: {fileID: 6965243336770932670, guid: c522fe24aec27284c8ede627a931f088, type: 3}
+  Bullet_Enemy2: {fileID: 8955075844668348066, guid: 5c74bf87b25a45849a8e3aeb1da328aa, type: 3}
   PowerUp: {fileID: 6013672712648121326, guid: efa2f91474a9c0a45bee84450f669836, type: 3}
-  delayLimit: 300
+  vspeed: 1
+  hspeed: 0.2
+  type: 1
+  delayLimit: 250
 --- !u!61 &4915159725657743013
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
         Destroy(gameObject, 0.25f);
     }
 
-    void Update() {
+    void FixedUpdate() {
         body.velocity = new Vector2( 0, velocity );
     }
 }
