@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
     public GameObject Bullet_Enemy1;
     public GameObject Bullet_Enemy2;
     public GameObject PowerUp;
+    public GameObject PlayerO;
     private Rigidbody2D body;
     private Vector2 deathPoint;
     private int delay = 0;
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour {
 
     private void Awake() {
         body = GetComponent< Rigidbody2D >();
+        PlayerO = GameObject.FindGameObjectWithTag( "Player" );
         Cannon = transform.Find( "Cannon" ).gameObject;
     }
     private void Update() {
@@ -82,6 +84,7 @@ public class Enemy : MonoBehaviour {
         if ( other.gameObject.tag.Equals( "Bullet" ) ) {
             Instantiate( PowerUp, deathPoint, Quaternion.identity );
             Destroy( other.gameObject );
+            PlayerO.SendMessage( "ScoreUp", 100 );
             Destroy( gameObject );
         }
     }

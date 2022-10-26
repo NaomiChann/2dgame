@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
     private GameObject Cannon_1;
@@ -22,6 +23,9 @@ public class Player : MonoBehaviour {
     private float dirX = 0f;
     private float dirY = 0f;
 
+    public int score = 0;
+    public Text scoreText;
+
     private void Awake() {
         body = GetComponent< Rigidbody2D >();
         pCollider = GetComponent< Collider2D >();
@@ -37,7 +41,7 @@ public class Player : MonoBehaviour {
         SetSpawn( transform.position );
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         Vector2 view = transform.position;
         
         dirX = Input.GetAxisRaw( "Horizontal" );
@@ -58,6 +62,8 @@ public class Player : MonoBehaviour {
                 Shoot();
             }
         }
+
+        scoreText.text = score.ToString();
 
         delay++;
     }
@@ -113,5 +119,9 @@ public class Player : MonoBehaviour {
             case "life":
                 break;
         }
+    }
+
+    public void ScoreUp( int inc ) {
+        score += inc;
     }
 }
